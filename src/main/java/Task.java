@@ -24,7 +24,6 @@ public class Task {
     }
 
     public Task(String title, Date time, boolean active) {
-        //
         this.title = title;
         this.time = time;
         this.active = active;

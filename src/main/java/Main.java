@@ -47,11 +47,9 @@ public class Main {
         main.readData(map1, map);
 
         try {
-            serverSocket = new ServerSocket(1111);
+            serverSocket = new ServerSocket(1488);
             while (true) {
-                socket = serverSocket.accept();
-                new ServerThread(socket, map, map1).start();
-                //
+                new ServerThread(serverSocket.accept(), map, map1).start();
             }
         } catch (IOException e) {
             e.printStackTrace();

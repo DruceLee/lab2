@@ -8,24 +8,34 @@ public class Client {
         try {
             Gson gson = new Gson();
 
-            Socket client = new Socket("127.0.0.1", 1111);
-            //
+            Socket client = new Socket("127.0.0.1", 1488);
+            PrintWriter printWriter = new PrintWriter(client.getOutputStream());
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(client.getInputStream()));
 
-            BufferedWriter out = new BufferedWriter(
-                    new OutputStreamWriter(client.getOutputStream()));
+            printWriter.println("Login: aa ba");
+            printWriter.flush();
 
-            out.write("Login: aa ba");
-            out.flush();
-/*            while (true) {
+            while (true) {
                 String list = in.readLine();
+                System.out.println(list);
+                Thread.sleep(1000);
+            }
+            /*ObjectInputStream in = new ObjectInputStream(client.getInputStream());
+            ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
+
+            out.writeObject("Login: aa ba");
+            out.flush();
+            while (true) {
+                String list = (String) in.readObject();
                 if (!"".equals(list)) {
                     System.out.println(list);
                     break;
                 }
             }*/
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

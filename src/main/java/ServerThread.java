@@ -20,21 +20,17 @@ public class ServerThread extends Thread {
 
     @Override
     public void run() {
-        System.out.println("dfhdfh");
-        //
         try {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
-
-            BufferedWriter out = new BufferedWriter(
-                    new OutputStreamWriter(socket.getOutputStream()));
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
 
             while (true) {
 
                 String response = in.readLine();
                 System.out.println(response);
 
-               /* String title = response.substring(0, response.indexOf(":") + 1);
+                String title = response.substring(0, response.indexOf(":") + 1);
                 response = response.substring(response.indexOf(":") + 2);
 
                 if (title.equals("Login:")) {
@@ -42,26 +38,26 @@ public class ServerThread extends Thread {
                     String password = response.substring(response.indexOf(" ") + 1);
 
                     if (loginPassword.get(login) == null) {
-                        out.write("Login entered incorrectly");
-                        out.flush();
+                        printWriter.println("Login entered incorrectly");
+                        printWriter.flush();
                     }
 
                     if (password.equals(loginPassword.get(login))) {
                         Gson gson = new Gson();
                         response = gson.toJson(loginTaskList.get(login));
-                        out.write(response);
-                        out.flush();
+                        printWriter.println(response);
+                        printWriter.flush();
                     } else {
-                        out.write("Password entered incorrectly");
-                        out.flush();
+                        printWriter.println("Password entered incorrectly");
+                        printWriter.flush();
                     }
                 } else if (title.equals("Registration:")) {
                     String login = response.substring(0, response.indexOf(" "));
                     String password = response.substring(response.indexOf(" ") + 1);
 
                     if (loginPassword.get(login) != null) {
-                        out.write("Such a login is already busy");
-                        out.flush();
+                        printWriter.println("Such a login is already busy");
+                        printWriter.flush();
                     } else {
                         loginPassword.put(login, password);
                         loginTaskList.put(login, new ArrayList<Task>());
@@ -75,9 +71,13 @@ public class ServerThread extends Thread {
 
                     loginTaskList.remove(login);
                     loginTaskList.put(login, taskList);
-                }*/
+                }
+
+                Thread.sleep(10);
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
