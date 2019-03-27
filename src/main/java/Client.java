@@ -9,6 +9,7 @@ public class Client {
             Gson gson = new Gson();
 
             Socket client = new Socket("127.0.0.1", 1111);
+            //
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(client.getInputStream()));
 

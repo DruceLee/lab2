@@ -51,6 +51,7 @@ public class Main {
             while (true) {
                 socket = serverSocket.accept();
                 new ServerThread(socket, map, map1).start();
+                //
             }
         } catch (IOException e) {
             e.printStackTrace();
