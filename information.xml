@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<users>
+    <user login="aa" password="ba">
+        <task>
+            <title value="aaaaaaa"/>
+            <time value="1999-12-12/12:12:12"/>
+            <start value=""/>
+            <end value=""/>
+            <interval value="0"/>
+            <active value="false"/>
+        </task>
+    </user>
+    <user login="ab" password="bb">
+        <task>
+            <title value="aaaaaaa"/>
+            <time value="1999-12-12/12:12:12"/>
+            <start value=""/>
+            <end value=""/>
+            <interval value="0"/>
+            <active value="false"/>
+        </task>
+    </user>
+    <user login="ac" password="bc">
+        <task>
+            <title value="aaaaaaa"/>
+            <time value="1999-12-12/12:12:12"/>
+            <start value=""/>
+            <end value=""/>
+            <interval value="0"/>
+            <active value="false"/>
+        </task>
+    </user>
+    <user login="ad" password="bd">
+        <task>
+            <title value="aaaaaaa"/>
+            <time value="1999-12-12/12:12:12"/>
+            <start value=""/>
+            <end value=""/>
+            <interval value="0"/>
+            <active value="false"/>
+        </task>
+    </user>
+    <user login="ae" password="be">
+        <task>
+            <title value="aaaaaaa"/>
+            <time value="1999-12-12/12:12:12"/>
+            <start value=""/>
+            <end value=""/>
+            <interval value="0"/>
+            <active value="false"/>
+        </task>
+    </user>
+</users>
