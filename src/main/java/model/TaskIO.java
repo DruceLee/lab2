@@ -1,6 +1,10 @@
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import org.w3c.dom.*;
+package model;
+
+import model.Task;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -9,59 +13,19 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
-public class Main {
-    private final String fileName = "information.xml";
-    static private ServerSocket serverSocket;
-    static private Socket socket;
-    static private ObjectOutputStream objectOutputStream;
-    static private ObjectInputStream objectInputStream;
+public class TaskIO {
+    private String fileName = "information.xml";
 
-    public static void main(String[] args) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd/hh:mm:ss");
-        TreeMap<String, String> map = new TreeMap<>();
-        TreeMap<String, ArrayList<Task>> map1 = new TreeMap<>();
-
-        /*map.put("aa", "ba");
-        map.put("ab", "bb");
-        map.put("ac", "bc");
-        map.put("ad", "bd");
-        map.put("ae", "be");
-
-        ArrayList<Task> arrayList = new ArrayList<>();
-        arrayList.add(new Task("ata", dateFormat.parse("1999-12-12/12:12:12"), false));
-        map1.put("aa", arrayList);
-        map1.put("ab", arrayList);
-        map1.put("ac", arrayList);
-        map1.put("ad", arrayList);
-        map1.put("ae", arrayList);*/
-
-        Main main = new Main();
-
-        main.readData(map1, map);
-
-        try {
-            serverSocket = new ServerSocket(1488);
-            while (true) {
-                new ServerThread(serverSocket.accept(), map, map1).start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        main.writeData(map1, map);
-    }
-
-    public Main() {
-    }
-
-    private void readData(TreeMap<String, ArrayList<Task>> information, TreeMap<String, String> usersList) {
+    public void readData(TreeMap<String, ArrayList<Task>> information, ArrayList<User> usersList) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -75,7 +39,8 @@ public class Main {
                     Element user = (Element) node;
                     String login = user.getAttribute("login");
                     String password = user.getAttribute("password");
-                    usersList.put(login, password);
+                    String isBanned = user.getAttribute("isBanned");
+                    usersList.add(new User(login, password, Boolean.parseBoolean(isBanned)));
 
                     NodeList tasks = user.getChildNodes();
                     ArrayList<Task> taskArrayList = new ArrayList<>();
@@ -147,7 +112,7 @@ public class Main {
         return task;
     }
 
-    private void writeData(TreeMap<String, ArrayList<Task>> information, TreeMap<String, String> usersList) {
+    public void writeData(TreeMap<String, ArrayList<Task>> information, ArrayList<User> usersList) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -155,23 +120,14 @@ public class Main {
             Element users = document.createElement("users");
             document.appendChild(users);
 
-            Map.Entry<String, String> a = usersList.firstEntry();
-            Element user1 = document.createElement("user");
-            users.appendChild(user1);
-            user1.setAttribute("login", a.getKey());
-            user1.setAttribute("password", a.getValue());
-            ArrayList<Task> list1 = information.get(a.getKey());
-            addElements(user1, list1, document);
-
-            while (!a.equals(usersList.lastEntry())) {
-                a = usersList.higherEntry(a.getKey());
-                Element user = document.createElement("user");
-                users.appendChild(user);
-                user.setAttribute("login", a.getKey());
-                user.setAttribute("password", a.getValue());
-
-                ArrayList<Task> list = information.get(a.getKey());
-                addElements(user, list, document);
+            for (User user : usersList){
+                Element user1 = document.createElement("user");
+                users.appendChild(user1);
+                user1.setAttribute("login", user.getLogin());
+                user1.setAttribute("password", user.getPassword());
+                user1.setAttribute("isBanned", String.valueOf(user.isBanned()));
+                ArrayList<Task> list1 = information.get(user.getLogin());
+                addElements(user1, list1, document);
             }
 
             Transformer t = TransformerFactory.newInstance().newTransformer();

@@ -18,8 +18,11 @@ public class Client {
 
             while (true) {
                 String list = in.readLine();
-                System.out.println(list);
-                Thread.sleep(1000);
+                if (!"".equals(list)) {
+                    System.out.println(list);
+                    break;
+                }
+                Thread.sleep(10);
             }
             /*ObjectInputStream in = new ObjectInputStream(client.getInputStream());
             ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
