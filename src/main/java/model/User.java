@@ -3,12 +3,12 @@ package model;
 public class User {
     private String login;
     private String password;
-    private boolean isBanned;
+    private boolean banned;
 
     public User(String login, String password, boolean isBanned) {
         this.login = login;
         this.password = password;
-        this.isBanned = isBanned;
+        this.banned = isBanned;
     }
 
     public String getLogin() {
@@ -20,6 +20,10 @@ public class User {
     }
 
     public boolean isBanned() {
-        return isBanned;
+        return banned;
+    }
+
+    public void setBanned(boolean banned) {
+        this.banned = banned;
     }
 }

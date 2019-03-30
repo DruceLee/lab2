@@ -14,8 +14,8 @@ import java.util.*;
 
 public class ServerThread extends Thread {
     private Socket socket = null;
-    private ArrayList<User> usersList;
-    private TreeMap<String, ArrayList<Task>> tasksList;
+    private final ArrayList<User> usersList;
+    private final TreeMap<String, ArrayList<Task>> tasksList;
 
     public ServerThread(Socket socket, ArrayList<User> usersList, TreeMap<String, ArrayList<Task>> tasksList) {
         this.socket = socket;
@@ -42,21 +42,25 @@ public class ServerThread extends Thread {
                     String login = response.substring(0, response.indexOf(" "));
                     String password = response.substring(response.indexOf(" ") + 1);
 
-                    for (User user : usersList) {
-                        if (user.getLogin().equals(login)) {
-                            if (user.getPassword().equals(password)) {
-                                if (user.isBanned()) {
-                                    printWriter.println("You are banned");
-                                    printWriter.flush();
+                    synchronized (usersList) {
+                        for (User user : usersList) {
+                            if (user.getLogin().equals(login)) {
+                                if (user.getPassword().equals(password)) {
+                                    if (user.isBanned()) {
+                                        printWriter.println("You are banned");
+                                        printWriter.flush();
+                                    } else {
+                                        Gson gson = new Gson();
+                                        synchronized (tasksList) {
+                                            response = gson.toJson(tasksList.get(login));
+                                            printWriter.println(response);
+                                            printWriter.flush();
+                                        }
+                                    }
                                 } else {
-                                    Gson gson = new Gson();
-                                    response = gson.toJson(tasksList.get(login));
-                                    printWriter.println(response);
+                                    printWriter.println("Password entered incorrectly");
                                     printWriter.flush();
                                 }
-                            } else {
-                                printWriter.println("Password entered incorrectly");
-                                printWriter.flush();
                             }
                         }
                     }
@@ -67,28 +71,34 @@ public class ServerThread extends Thread {
                     String login = response.substring(0, response.indexOf(" "));
                     String password = response.substring(response.indexOf(" ") + 1);
 
-                    for (User user : usersList) {
-                        if (user.getLogin().equals(login)) {
-                            printWriter.println("Such a login is already busy");
-                            printWriter.flush();
+                    synchronized (usersList) {
+                        for (User user : usersList) {
+                            if (user.getLogin().equals(login)) {
+                                printWriter.println("Such a login is already busy");
+                                printWriter.flush();
+                            }
                         }
+                        usersList.add(new User(login, password, false));
+                        tasksList.put(login, new ArrayList<>());
                     }
-                    usersList.add(new User(login, password, false));
-                    tasksList.put(login, new ArrayList<>());
                 } else if ("Delete:".equals(title)) {
                     Gson gson = new Gson();
                     String login = response.substring(0, response.indexOf(" "));
                     Task task = gson.fromJson(response.substring(response.indexOf(" ") + 1), new TypeToken<Task>() {
                     }.getType());
 
-                    tasksList.get(login).remove(task);
+                    synchronized (tasksList) {
+                        tasksList.get(login).remove(task);
+                    }
                 } else if ("Add:".equals(title)) {
                     Gson gson = new Gson();
                     String login = response.substring(0, response.indexOf(" "));
                     Task task = gson.fromJson(response.substring(response.indexOf(" ") + 1), new TypeToken<Task>() {
                     }.getType());
 
-                    tasksList.get(login).add(task);
+                    synchronized (tasksList) {
+                        tasksList.get(login).add(task);
+                    }
                 } else if ("Change:".equals(title)) {
                     String login = response.substring(0, response.indexOf(" "));
                     response = response.substring(response.indexOf(" ") + 1);
@@ -98,7 +108,9 @@ public class ServerThread extends Thread {
                     Task task = gson.fromJson(response.substring(response.indexOf(" ") + 1), new TypeToken<Task>() {
                     }.getType());
 
-                    tasksList.get(login).set(index, task);
+                    synchronized (tasksList) {
+                        tasksList.get(login).set(index, task);
+                    }
                 } else if ("Calendar:".equals(title)) {
                     Gson gson = new Gson();
                     String login = response.substring(0, response.indexOf(" "));
@@ -107,12 +119,16 @@ public class ServerThread extends Thread {
                     Date date1 = simpleDateFormat.parse(response.substring(0, response.indexOf(" ")));
                     Date date2 = simpleDateFormat.parse(response.substring(response.indexOf(" ") + 1));
 
-                    SortedMap<Date, Set<Task>> sortedMap = Tasks.calendar(tasksList.get(login), date1, date2);
-                    printWriter.println(gson.toJson(sortedMap));
-                    printWriter.flush();
+                    synchronized (tasksList) {
+                        SortedMap<Date, Set<Task>> sortedMap = Tasks.calendar(tasksList.get(login), date1, date2);
+                        printWriter.println(gson.toJson(sortedMap));
+                        printWriter.flush();
+                    }
                 } else if ("Banned list:".equals(title)) {
                     Gson gson = new Gson();
-                    printWriter.println(gson.toJson(usersList));
+                    synchronized (usersList) {
+                        printWriter.println(gson.toJson(usersList));
+                    }
                 }
 
                 Thread.sleep(10);
