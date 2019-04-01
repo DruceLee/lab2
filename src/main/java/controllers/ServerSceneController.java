@@ -20,10 +20,8 @@ import java.util.TreeMap;
 
 public class ServerSceneController {
     private ObservableList<User> observableList;
-    private ServerSocket serverSocket;
 
     private ArrayList<User> usersList = new ArrayList<>();
-    private TreeMap<String, ArrayList<Task>> tasksList = new TreeMap<>();
 
     @FXML
     private TableView<User> table;
@@ -34,10 +32,8 @@ public class ServerSceneController {
     @FXML
     private TableColumn isBanned;
 
-    @FXML
-    public void initialize() {
-        TaskIO readerWriter = new TaskIO();
-        readerWriter.readData(tasksList, usersList);
+    public void setParams(ArrayList<User> usersList) {
+        this.usersList = usersList;
         observableList = FXCollections.observableArrayList(usersList);
 
         login.setCellValueFactory(new PropertyValueFactory<User, String>("login"));
@@ -47,6 +43,10 @@ public class ServerSceneController {
         table.setItems(observableList);
     }
 
+    @FXML
+    public void initialize() {
+    }
+
     public void rebut(ActionEvent actionEvent) {
     }
 
@@ -54,15 +54,6 @@ public class ServerSceneController {
         User user = table.getSelectionModel().getSelectedItem();
         user.setBanned(!user.isBanned());
         table.refresh();
-
-        synchronized (usersList) {
-            for (int i = 0; i < usersList.size(); i++) {
-                if (user.equals(usersList.get(i))) {
-                    User user1 = usersList.get(i);
-                    user1.setBanned(!user1.isBanned());
-                }
-            }
-        }
     }
 
     public void exit(ActionEvent actionEvent) {

@@ -24,6 +24,9 @@ public class Client {
                 }
                 Thread.sleep(10);
             }
+
+            printWriter.println("Exit work: ");
+            printWriter.flush();
             /*ObjectInputStream in = new ObjectInputStream(client.getInputStream());
             ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
 

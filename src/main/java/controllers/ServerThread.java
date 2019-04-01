@@ -49,17 +49,20 @@ public class ServerThread extends Thread {
                                     if (user.isBanned()) {
                                         printWriter.println("You are banned");
                                         printWriter.flush();
+                                        break;
                                     } else {
                                         Gson gson = new Gson();
                                         synchronized (tasksList) {
                                             response = gson.toJson(tasksList.get(login));
                                             printWriter.println(response);
                                             printWriter.flush();
+                                            break;
                                         }
                                     }
                                 } else {
                                     printWriter.println("Password entered incorrectly");
                                     printWriter.flush();
+                                    break;
                                 }
                             }
                         }
@@ -129,6 +132,9 @@ public class ServerThread extends Thread {
                     synchronized (usersList) {
                         printWriter.println(gson.toJson(usersList));
                     }
+                } else if ("Exit work:".equals(title)) {
+                    socket.close();
+                    break;
                 }
 
                 Thread.sleep(10);

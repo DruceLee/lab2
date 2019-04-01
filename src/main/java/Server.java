@@ -1,3 +1,4 @@
+import controllers.ServerSceneController;
 import controllers.ServerThread;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -29,6 +30,8 @@ public class Server extends Application {
         fxmlLoader.setLocation(getClass().getResource("FXML/ServerScene.fxml"));
         Parent root = fxmlLoader.load();
 
+        ((ServerSceneController) fxmlLoader.getController()).setParams(usersList);
+
         primaryStage.setTitle("Server");
         primaryStage.setScene(new Scene(root, 444, 318));
         primaryStage.show();
@@ -50,9 +53,9 @@ public class Server extends Application {
     }
 
     public static void main(String[] args) {
-        /*TaskIO taskIO = new TaskIO();
+        TaskIO taskIO = new TaskIO();
 
-        usersList.add(new User("aa", "ba", false));
+        /*usersList.add(new User("aa", "ba", false));
         usersList.add(new User("ab", "bb", false));
         usersList.add(new User("ac", "bc", false));
         usersList.add(new User("ad", "bd", false));
@@ -64,9 +67,9 @@ public class Server extends Application {
         arrayList.add(new Task("Hello", new Date(), false));
         for (User user : usersList) {
             tasksList.put(user.getLogin(), arrayList);
-        }
-        taskIO.writeData(tasksList, usersList);
-        */
+        }*/
+        taskIO.readData(tasksList, usersList);
+
         new Thread(() -> {
             try {
                 serverSocket = new ServerSocket(1488);
