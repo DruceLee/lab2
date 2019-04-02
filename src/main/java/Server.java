@@ -14,11 +14,13 @@ import model.User;
 
 import java.io.*;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Server extends Application {
     private static ServerSocket serverSocket;
+    private static ArrayList<Socket> socketList = new ArrayList<>();
 
     private final static ArrayList<User> usersList = new ArrayList<>();
     private final static TreeMap<String, ArrayList<Task>> tasksList = new TreeMap<>();
@@ -43,6 +45,16 @@ public class Server extends Application {
                     synchronized (usersList) {
                         TaskIO readerWriter = new TaskIO();
                         readerWriter.writeData(tasksList, usersList);
+
+                        try {
+                            for (Socket socket : socketList) {
+                                PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+                                printWriter.println("Exit");
+                                printWriter.flush();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
                         Platform.exit();
                         System.exit(0);
@@ -74,7 +86,9 @@ public class Server extends Application {
             try {
                 serverSocket = new ServerSocket(1488);
                 while (true) {
-                    new ServerThread(serverSocket.accept(), usersList, tasksList).start();
+                    Socket socket = serverSocket.accept();
+                    socketList.add(socket);
+                    new ServerThread(socketList.get(socketList.size() - 1), usersList, tasksList).start();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

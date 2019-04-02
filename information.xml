@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <users>
-    <user isBanned="true" login="aa" password="ba">
+    <user isBanned="false" login="aa" password="ba">
         <task>
             <title value="Hello"/>
             <time value="2019-04-01/07:03:46"/>

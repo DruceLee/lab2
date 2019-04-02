@@ -53,8 +53,7 @@ public class ServerThread extends Thread {
                                     } else {
                                         Gson gson = new Gson();
                                         synchronized (tasksList) {
-                                            response = gson.toJson(tasksList.get(login));
-                                            printWriter.println(response);
+                                            printWriter.println(gson.toJson(tasksList.get(login)));
                                             printWriter.flush();
                                             break;
                                         }
@@ -107,9 +106,9 @@ public class ServerThread extends Thread {
                     response = response.substring(response.indexOf(" ") + 1);
                     Gson gson = new Gson();
                     int index = Integer.parseInt(response.substring(0, response.indexOf(" ")));
+                    response = response.substring(response.indexOf(" "));
 
-                    Task task = gson.fromJson(response.substring(response.indexOf(" ") + 1), new TypeToken<Task>() {
-                    }.getType());
+                    Task task = gson.fromJson(response, Task.class);
 
                     synchronized (tasksList) {
                         tasksList.get(login).set(index, task);
