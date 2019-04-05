@@ -47,19 +47,19 @@ public class ServerThread extends Thread {
                             if (user.getLogin().equals(login)) {
                                 if (user.getPassword().equals(password)) {
                                     if (user.isBanned()) {
-                                        printWriter.println("You are banned");
+                                        printWriter.println("Login: You are banned");
                                         printWriter.flush();
                                         break;
                                     } else {
                                         Gson gson = new Gson();
                                         synchronized (tasksList) {
-                                            printWriter.println(gson.toJson(tasksList.get(login)));
+                                            printWriter.println("Login: " + user.getAdmin()+ " " + gson.toJson(tasksList.get(login)));
                                             printWriter.flush();
                                             break;
                                         }
                                     }
                                 } else {
-                                    printWriter.println("Password entered incorrectly");
+                                    printWriter.println("Login: Password entered incorrectly");
                                     printWriter.flush();
                                     break;
                                 }
@@ -67,7 +67,7 @@ public class ServerThread extends Thread {
                         }
                     }
 
-                    printWriter.println("Login entered incorrectly");
+                    printWriter.println("Login: Login entered incorrectly");
                     printWriter.flush();
                 } else if ("Registration:".equals(title)) {
                     String login = response.substring(0, response.indexOf(" "));
@@ -76,12 +76,17 @@ public class ServerThread extends Thread {
                     synchronized (usersList) {
                         for (User user : usersList) {
                             if (user.getLogin().equals(login)) {
-                                printWriter.println("Such a login is already busy");
+                                printWriter.println("Registration: Such a login is already busy");
                                 printWriter.flush();
                             }
                         }
-                        usersList.add(new User(login, password, false));
+                        usersList.add(new User(login, password, false, "false"));
                         tasksList.put(login, new ArrayList<>());
+                        Gson gson = new Gson();
+                        synchronized (tasksList) {
+                            printWriter.println("Registration: " + gson.toJson(tasksList.get(login)));
+                            printWriter.flush();
+                        }
                     }
                 } else if ("Delete:".equals(title)) {
                     Gson gson = new Gson();

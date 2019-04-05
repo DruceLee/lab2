@@ -31,6 +31,8 @@ public class ServerSceneController {
     private TableColumn password;
     @FXML
     private TableColumn isBanned;
+    @FXML
+    private TableColumn admin;
 
     public void setParams(ArrayList<User> usersList) {
         this.usersList = usersList;
@@ -39,6 +41,7 @@ public class ServerSceneController {
         login.setCellValueFactory(new PropertyValueFactory<User, String>("login"));
         password.setCellValueFactory(new PropertyValueFactory<User, String>("password"));
         isBanned.setCellValueFactory(new PropertyValueFactory<User, Boolean>("banned"));
+        admin.setCellValueFactory(new PropertyValueFactory<User, String>("admin"));
 
         table.setItems(observableList);
     }

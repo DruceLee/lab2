@@ -40,7 +40,8 @@ public class TaskIO {
                     String login = user.getAttribute("login");
                     String password = user.getAttribute("password");
                     String isBanned = user.getAttribute("isBanned");
-                    usersList.add(new User(login, password, Boolean.parseBoolean(isBanned)));
+                    String admin = user.getAttribute("admin");
+                    usersList.add(new User(login, password, Boolean.parseBoolean(isBanned), admin));
 
                     NodeList tasks = user.getChildNodes();
                     ArrayList<Task> taskArrayList = new ArrayList<>();
@@ -126,6 +127,7 @@ public class TaskIO {
                 user1.setAttribute("login", user.getLogin());
                 user1.setAttribute("password", user.getPassword());
                 user1.setAttribute("isBanned", String.valueOf(user.isBanned()));
+                user1.setAttribute("admin", user.getAdmin());
                 ArrayList<Task> list1 = information.get(user.getLogin());
                 addElements(user1, list1, document);
             }
