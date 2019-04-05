@@ -128,7 +128,7 @@ public class ServerThread extends Thread {
 
                     synchronized (tasksList) {
                         SortedMap<Date, Set<Task>> sortedMap = Tasks.calendar(tasksList.get(login), date1, date2);
-                        printWriter.println(gson.toJson(sortedMap));
+                        printWriter.println("Calendar: " + gson.toJson(sortedMap));
                         printWriter.flush();
                     }
                 } else if ("Banned list:".equals(title)) {

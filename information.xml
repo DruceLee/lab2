@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <users>
-    <user admin="false" isBanned="false" login="aa" password="ba">
-        <task>
-            <title value="Hello"/>
-            <time value="2019-04-01/07:03:46"/>
-            <start value=""/>
-            <end value=""/>
-            <interval value="0"/>
-            <active value="false"/>
-        </task>
-    </user>
+    <user admin="false" isBanned="false" login="aa" password="ba"/>
     <user admin="false" isBanned="false" login="ab" password="bb">
         <task>
             <title value="Hello"/>
@@ -60,4 +51,5 @@
             <active value="false"/>
         </task>
     </user>
+    <user admin="false" isBanned="false" login="aa" password="ba"/>
 </users>
