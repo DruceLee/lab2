@@ -32,7 +32,7 @@ public class Server extends Application {
         fxmlLoader.setLocation(getClass().getResource("FXML/ServerScene.fxml"));
         Parent root = fxmlLoader.load();
 
-        ((ServerSceneController) fxmlLoader.getController()).setParams(usersList);
+        ((ServerSceneController) fxmlLoader.getController()).setParams(usersList, tasksList, serverSocket, socketList);
 
         primaryStage.setTitle("Server");
         primaryStage.setScene(new Scene(root, 444, 318));
@@ -86,9 +86,11 @@ public class Server extends Application {
             try {
                 serverSocket = new ServerSocket(1488);
                 while (true) {
-                    Socket socket = serverSocket.accept();
-                    socketList.add(socket);
-                    new ServerThread(socketList.get(socketList.size() - 1), usersList, tasksList).start();
+                    synchronized (serverSocket) {
+                        Socket socket = serverSocket.accept();
+                        socketList.add(socket);
+                        new ServerThread(socketList.get(socketList.size() - 1), usersList, tasksList).start();
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -96,7 +98,5 @@ public class Server extends Application {
         }).start();
 
         launch(args);
-
-
     }
 }
