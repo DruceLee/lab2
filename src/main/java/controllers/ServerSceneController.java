@@ -62,6 +62,7 @@ public class ServerSceneController {
                     PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
 
                     printWriter.println("Exit");
+                    printWriter.flush();
                 }
             }
 

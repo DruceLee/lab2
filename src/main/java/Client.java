@@ -16,7 +16,7 @@ public class Client {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(client.getInputStream()));
 
-            printWriter.println("Login: aa ba");
+            printWriter.println("Login: aq bd");
             printWriter.flush();
 
             String list;
@@ -25,13 +25,11 @@ public class Client {
                 list = in.readLine();
                 if (!list.isEmpty()) {
                     System.out.println(list);
-                    break;
+                    if (list.equals("Exit"))
+                        System.exit(0);
                 }
                 Thread.sleep(10);
             }
-
-            printWriter.println("Exit work: ");
-            printWriter.flush();
             /*ObjectInputStream in = new ObjectInputStream(client.getInputStream());
             ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
 

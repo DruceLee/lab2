@@ -42,8 +42,11 @@ public class ServerThread extends Thread {
                     String login = response.substring(0, response.indexOf(" "));
                     String password = response.substring(response.indexOf(" ") + 1);
 
+                    int i = 0;
+
                     synchronized (usersList) {
                         for (User user : usersList) {
+                            i++;
                             if (user.getLogin().equals(login)) {
                                 if (user.getPassword().equals(password)) {
                                     if (user.isBanned()) {
@@ -67,8 +70,10 @@ public class ServerThread extends Thread {
                         }
                     }
 
-                    printWriter.println("Login: Login entered incorrectly");
-                    printWriter.flush();
+                    if (i == usersList.size()) {
+                        printWriter.println("Login: Login entered incorrectly");
+                        printWriter.flush();
+                    }
                 } else if ("Registration:".equals(title)) {
                     String login = response.substring(0, response.indexOf(" "));
                     String password = response.substring(response.indexOf(" ") + 1);
